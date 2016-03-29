@@ -29,11 +29,9 @@ def index():
 				html += '<tr><td>'
 				html += i['cod_prom'][0] + '</td><td>'
 				html += i['data_prom'][0] + '</td><td>'
-				html += i['nm_obs'] + '</td><td>'
 				html += i['nm_prom'][0] + '</td><td>'
 				html += '<img src="' + i['url_img'][0] + '"></td><td>'
 				html += i['url_prom'][0] + '</td><td>'
-				html += i['url_origem'][0] + '</td><td>'
 				html += i['valor'][0] + '</td></tr>'
 
 			html +='</table>'
@@ -43,5 +41,5 @@ def index():
 
 
 if __name__ == '__main__':
-	app.run(debug=True)
-	#app.run(host='0.0.0.0', debug=True)
+	#app.run(debug=True)
+	app.run(host='0.0.0.0', debug=True)
