@@ -1,8 +1,19 @@
 from flask import Flask
+from flask import jsonify
 import scrapinghub_funcs
+import pymongo
+from pymongo import MongoClient
 import re
+import os
 
 app = Flask(__name__)
+
+#mongo stuffs
+#client = MongoClient()
+client = MongoClient('mongodb:%s:%s/' % (os.environ['OPENSHIFT_MONGODB_DB_HOST'], os.environ['OPENSHIFT_MONGODB_DB_PORT']))
+db = client.promocao
+items_collection = db.items
+result = items_collection.create_index([('cod_prom', pymongo.ASCENDING)], unique=True)
 
 @app.route('/')
 def hello_world():
@@ -38,8 +49,29 @@ def index():
 
 	return html
 
+@app.route('/gatryjson')
+def json_api():
+			
+	resultado = scrapinghub_funcs.listJobs()
+	itemsJson = []
+	for j in resultado:
+		if j['state'] == 'finished':
+			items = scrapinghub_funcs.getItems(j['key'])
 
+			for i in items:
+				itemsJson.append(i)
+
+			#scrapinghub_funcs.deleteJob(j['key'])
+
+	jobs_json = jsonify(itens=itemsJson, total=len(itemsJson))
+	try:
+		result = items_collection.insert_many(itemsJson)
+		#print result
+	except:
+		print "Um ou mais items ja existiam na base"
+
+	return jobs_json
 
 if __name__ == '__main__':
-	#app.run(debug=True)
-	app.run(host='0.0.0.0', debug=True)
+	app.run(debug=True)
+	#app.run(host='0.0.0.0', debug=True)

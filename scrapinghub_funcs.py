@@ -13,6 +13,10 @@ def getItems(job):
 	items = hc.get_job(job).items.list()
 	return items
 
+def deleteJob(job):
+	job = hc.get_job(job)
+	job.purged()
+
 def getItemCsv(job):
 	fields = 'cod_prom,data_prom,name,nm_prom,url_img,url_prom,valor'
 	itemsCsv = requests.get('https://storage.scrapinghub.com/items/'+ job + '?apikey=' + apikey + '&format=csv&fields=' + fields)
