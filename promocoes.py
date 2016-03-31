@@ -10,7 +10,8 @@ app = Flask(__name__)
 
 #mongo stuffs
 #client = MongoClient()
-client = MongoClient("mongodb://%s:%s/" % (os.environ['OPENSHIFT_MONGODB_DB_HOST'], os.environ['OPENSHIFT_MONGODB_DB_PORT']))
+#client = MongoClient("mongodb://%s:%s/" % (os.environ['OPENSHIFT_MONGODB_DB_HOST'], os.environ['OPENSHIFT_MONGODB_DB_PORT']))
+client = MongoClient(os.environ['OPENSHIFT_MONGODB_DB_URL'])
 db = client.promocao
 items_collection = db.items
 result = items_collection.create_index([('cod_prom', pymongo.ASCENDING)], unique=True)
