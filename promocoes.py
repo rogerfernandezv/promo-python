@@ -24,7 +24,6 @@ items_collection = db.items
 result = items_collection.create_index([('cod_prom', pymongo.ASCENDING)], unique=True)
 
 
-
 @app.route('/')
 def hello_world():
 	return 'Ola mundinho'
