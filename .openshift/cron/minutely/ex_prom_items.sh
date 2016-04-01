@@ -1,2 +1,2 @@
 #!/bin/bash
-python ../../../promocao_items.py
+python $OPENSHIFT_REPO_DIR/promocao_items.py
