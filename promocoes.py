@@ -12,12 +12,12 @@ app = Flask(__name__)
 
 #mongo stuffs OPENSHIFT
 #client = MongoClient("mongodb://%s:%s/" % (os.environ['OPENSHIFT_MONGODB_DB_HOST'], os.environ['OPENSHIFT_MONGODB_DB_PORT']))
-#client = MongoClient(os.environ['OPENSHIFT_MONGODB_DB_URL'])
-#db = client.promocao
+client = MongoClient(os.environ['OPENSHIFT_MONGODB_DB_URL'])
+db = client.promocao
 
 # LOCAL TEST
-client = MongoClient()
-db = client.promocoes
+#client = MongoClient()
+#db = client.promocoes
 
 #grab db and collection
 items_collection = db.items
