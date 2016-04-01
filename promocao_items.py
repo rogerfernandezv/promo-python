@@ -27,4 +27,4 @@ for j in jobList:
 			except:
 				print "Um ou mais items ja existiam na base ou ocorreu falha job: " + j['key'] + " item: " + i['cod_prom'][0]
 
-		#scrapinghub_funcs.deleteJob(j['key'])
+		scrapinghub_funcs.deleteJob(j['key'])
