@@ -1,18 +1,16 @@
 from pymongo import MongoClient
 import pymongo
 import os
-import sys
-sys.path.insert(0,'../../../')
 import scrapinghub_funcs
 
 #mongo stuffs OPENSHIFT
 #client = MongoClient("mongodb://%s:%s/" % (os.environ['OPENSHIFT_MONGODB_DB_HOST'], os.environ['OPENSHIFT_MONGODB_DB_PORT']))
-client = MongoClient(os.environ['OPENSHIFT_MONGODB_DB_URL'])
-db = client.promocao
+#client = MongoClient(os.environ['OPENSHIFT_MONGODB_DB_URL'])
+#db = client.promocao
 
 # LOCAL TEST
-#client = MongoClient()
-#db = client.promocoes
+client = MongoClient()
+db = client.promocoes
 
 items_collection = db.items
 result = items_collection.create_index([('cod_prom', pymongo.ASCENDING)], unique=True)
