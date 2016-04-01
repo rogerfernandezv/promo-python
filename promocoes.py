@@ -1,20 +1,29 @@
 from flask import Flask
 from flask import jsonify
+from flask import make_response
+from pymongo import MongoClient
+from bson.json_util import dumps
+import json
 import scrapinghub_funcs
 import pymongo
-from pymongo import MongoClient
-import re
 import os
 
 app = Flask(__name__)
 
-#mongo stuffs
-#client = MongoClient()
+#mongo stuffs OPENSHIFT
 #client = MongoClient("mongodb://%s:%s/" % (os.environ['OPENSHIFT_MONGODB_DB_HOST'], os.environ['OPENSHIFT_MONGODB_DB_PORT']))
 client = MongoClient(os.environ['OPENSHIFT_MONGODB_DB_URL'])
 db = client.promocao
+
+# LOCAL TEST
+#client = MongoClient()
+#db = client.promocoes
+
+#grab db and collection
 items_collection = db.items
 result = items_collection.create_index([('cod_prom', pymongo.ASCENDING)], unique=True)
+
+
 
 @app.route('/')
 def hello_world():
@@ -22,54 +31,48 @@ def hello_world():
 
 @app.route('/gatry')
 def index():
+	items_db = items_collection.find()
 	html = ''
-	resultado = scrapinghub_funcs.listJobs()
 
-	for j in resultado:
-		if(str(j['state']) == 'finished'):
-			html += '<table border="1"><tr><td>Key: ' + j['key'] + '</td><td>Status: ' + j['state'] + '</td></tr>'
-			html += '''<tr>
-							<td>cod_prom</td>
-							<td>data_prom</td>
-							<td>nm_prom</td>
-							<td>url_img</td>
-							<td>url_prom</td>
-							<td>valor</td>
-						</tr>'''
-			items = scrapinghub_funcs.getItems(str(j['key']))
-			for i in items:
-				html += '<tr><td>'
-				html += i['cod_prom'][0] + '</td><td>'
-				html += i['data_prom'][0] + '</td><td>'
-				html += i['nm_prom'][0] + '</td><td>'
-				html += '<img src="' + i['url_img'][0] + '"></td><td>'
-				html += i['url_prom'][0] + '</td><td>'
-				html += i['valor'][0] + '</td></tr>'
+	for i in items_db:
+		html += '<table border="1">'
+		html += '''<tr>
+					<td>cod_prom</td>
+					<td>data_prom</td>
+					<td>nm_prom</td>
+					<td>url_img</td>
+					<td>url_prom</td>
+					<td>valor</td>
+				</tr>'''
+		html += '<tr><td>'
+		html += i['cod_prom'][0] + '</td><td>'
+		html += i['data_prom'][0] + '</td><td>'
+		html += i['nm_prom'][0] + '</td><td>'
+		html += '<img src="' + i['url_img'][0] + '"></td><td>'
+		html += i['url_prom'][0] + '</td><td>'
+		html += i['valor'][0] + '</td></tr>'
 
-			html +='</table>'
+	html +='</table>'
 
 	return html
 
 @app.route('/gatryjson')
 def json_api():
-			
-	resultado = scrapinghub_funcs.listJobs()
-	itemsJson = []
-	for j in resultado:
-		if j['state'] == 'finished':
-			items = scrapinghub_funcs.getItems(j['key'])
+	
+	items_db = items_collection.find()
+	listItems = list(items_db)
+	itemsJson = dumps(listItems)
 
-			for i in items:
-				itemsJson.append(i)
+	#for i in items_db:
+	#	itemsJson.append(i[0])
 
-			#scrapinghub_funcs.deleteJob(j['key'])
 
 	jobs_json = jsonify(itens=itemsJson, total=len(itemsJson))
-	try:
-		result = items_collection.insert_many(itemsJson)
-		#print result
-	except:
-		print "Um ou mais items ja existiam na base"
+
+	#response = make_response(json.dumps(items_db))
+	#response.content_type = "application/json"
+
+	#return response
 
 	return jobs_json
 
