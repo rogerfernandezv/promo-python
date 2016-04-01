@@ -12,12 +12,12 @@ app = Flask(__name__)
 
 #mongo stuffs OPENSHIFT
 #client = MongoClient("mongodb://%s:%s/" % (os.environ['OPENSHIFT_MONGODB_DB_HOST'], os.environ['OPENSHIFT_MONGODB_DB_PORT']))
-client = MongoClient(os.environ['OPENSHIFT_MONGODB_DB_URL'])
-db = client.promocao
+#client = MongoClient(os.environ['OPENSHIFT_MONGODB_DB_URL'])
+#db = client.promocao
 
 # LOCAL TEST
-#client = MongoClient()
-#db = client.promocoes
+client = MongoClient()
+db = client.promocoes
 
 #grab db and collection
 items_collection = db.items
@@ -44,11 +44,11 @@ def index():
 					<td>valor</td>
 				</tr>'''
 		html += '<tr><td>'
-		html += i['cod_prom'] + '</td><td>'
+		html += i['cod_prom'][0] + '</td><td>'
 		html += i['data_prom'] + '</td><td>'
 		html += i['nm_prom'] + '</td><td>'
 		html += '<img src="' + i['url_img'] + '"></td><td>'
-		html += i['url_prom'] + '</td><td>'
+		html += '<a href="' + i['url_prom'] + '">LINK</a></td><td>'
 		html += i['valor'] + '</td></tr>'
 
 	html +='</table>'
@@ -76,5 +76,5 @@ def json_api():
 	return jobs_json
 
 if __name__ == '__main__':
-	app.run(debug=True)
-	#app.run(host='0.0.0.0', debug=True)
+	#app.run(debug=True)
+	app.run(host='0.0.0.0', debug=True)
