@@ -36,6 +36,7 @@ def index():
 	for i in items_db:
 		html += '<table border="1">'
 		html += '''<tr>
+					<td>nome</td>
 					<td>cod_prom</td>
 					<td>data_prom</td>
 					<td>nm_prom</td>
@@ -44,12 +45,13 @@ def index():
 					<td>valor</td>
 				</tr>'''
 		html += '<tr><td>'
-		html += i['cod_prom'][0] + '</td><td>'
-		html += i['data_prom'][0] + '</td><td>'
-		html += i['nm_prom'][0] + '</td><td>'
-		html += '<img src="' + i['url_img'][0] + '"></td><td>'
-		html += i['url_prom'][0] + '</td><td>'
-		html += i['valor'][0] + '</td></tr>'
+		html += i['name'] + '</td><td>'
+		html += i['cod_prom'] + '</td><td>'
+		html += i['data_prom'] + '</td><td>'
+		html += i['nm_prom'] + '</td><td>'
+		html += '<img src="' + i['url_img'] + '"></td><td>'
+		html += i['url_prom'] + '</td><td>'
+		html += i['valor'] + '</td></tr>'
 
 	html +='</table>'
 
