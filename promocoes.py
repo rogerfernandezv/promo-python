@@ -44,7 +44,7 @@ def index():
 					<td>valor</td>
 				</tr>'''
 		html += '<tr><td>'
-		html += i['cod_prom'][0] + '</td><td>'
+		html += str(i['cod_prom']) + '</td><td>'
 		html += i['data_prom'] + '</td><td>'
 		html += i['nm_prom'] + '</td><td>'
 		html += '<img src="' + i['url_img'] + '"></td><td>'

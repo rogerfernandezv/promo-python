@@ -2,3 +2,12 @@ Flask==0.10.1
 scrapinghub
 hubstorage
 pymongo
+scrapy
+service-identity
+cssselect
+pyOpenSSL
+attrs
+pyasn1
+pyasn1-modules
+cryptography
+lxml==3.4.4
