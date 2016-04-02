@@ -11,3 +11,4 @@ pyasn1
 pyasn1-modules
 cryptography
 lxml==3.4.4
+ndg-httpsclient
