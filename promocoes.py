@@ -21,7 +21,7 @@ db = client.promocao
 
 #grab db and collection
 items_collection = db.items
-result = items_collection.create_index([('cod_prom', pymongo.ASCENDING)], unique=True)
+#result = items_collection.create_index([('cod_prom', pymongo.ASCENDING)], unique=True)
 
 
 @app.route('/')
@@ -30,7 +30,7 @@ def hello_world():
 
 @app.route('/gatry')
 def index():
-	items_db = items_collection.find()
+	items_db = items_collection.find().sort("cod_prom", -1)
 	html = ''
 
 	for i in items_db:
@@ -41,15 +41,31 @@ def index():
 					<td>nm_prom</td>
 					<td>url_img</td>
 					<td>url_prom</td>
+					<td>url_origem</td>
 					<td>valor</td>
+					<td>nm_obs</td>
+					<td>dt_criacao<td>
 				</tr>'''
 		html += '<tr><td>'
-		html += str(i['cod_prom']) + '</td><td>'
+
+		if(isinstance(i['cod_prom'],list)):
+			html += i['cod_prom'][0] + '</td><td>'
+		else:
+			html += i['cod_prom'] + '</td><td>'
+			
 		html += i['data_prom'] + '</td><td>'
 		html += i['nm_prom'] + '</td><td>'
 		html += '<img src="' + i['url_img'] + '"></td><td>'
-		html += '<a href="' + i['url_prom'] + '">LINK</a></td><td>'
-		html += i['valor'] + '</td></tr>'
+		if(isinstance(i['url_prom'],list)):
+			for u in i['url_prom']:
+				html += '<a href="' + u + '">LINK</a><br>'
+			html += '</td><td>'
+		else:
+			html += '<a href="' + i['url_prom'] + '">LINK</a></td><td>'
+		html += i['url_origem'] + '</td><td>'
+		html += i['valor'] + '</td><td>'
+		html += i['nm_obs'] + '</td><td>'
+		html += i['dt_criacao'] + '</td></tr>'
 
 	html +='</table>'
 

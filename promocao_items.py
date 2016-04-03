@@ -13,7 +13,7 @@ db = client.promocao
 #db = client.promocoes
 
 items_collection = db.items
-result = items_collection.create_index([('cod_prom', pymongo.ASCENDING)], unique=True)
+#result = items_collection.create_index([('cod_prom', pymongo.ASCENDING)], unique=True)
 
 jobList = scrapinghub_funcs.listJobs()
 
