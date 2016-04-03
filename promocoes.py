@@ -30,7 +30,7 @@ def hello_world():
 
 @app.route('/gatry')
 def index():
-	items_db = items_collection.find().sort("cod_prom", -1)
+	items_db = items_collection.find().sort("dt_criacao", -1)
 	html = ''
 
 	for i in items_db:
