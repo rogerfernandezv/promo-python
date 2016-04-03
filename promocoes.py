@@ -19,7 +19,7 @@ db = client.promocao
 #client = MongoClient()
 #db = client.promocoes
 
-#grab db and collection
+#set collection
 items_collection = db.items
 #result = items_collection.create_index([('cod_prom', pymongo.ASCENDING)], unique=True)
 
@@ -52,10 +52,14 @@ def index():
 			html += i['cod_prom'][0] + '</td><td>'
 		else:
 			html += i['cod_prom'] + '</td><td>'
-			
+
 		html += i['data_prom'] + '</td><td>'
 		html += i['nm_prom'] + '</td><td>'
-		html += '<img src="' + i['url_img'] + '"></td><td>'
+		if(i['url_img']):
+			html += '<img src="' + i['url_img'] + '"></td><td>'
+		else:
+			html += 'null</td><td>'
+
 		if(isinstance(i['url_prom'],list)):
 			for u in i['url_prom']:
 				html += '<a href="' + u + '">LINK</a><br>'
@@ -63,9 +67,21 @@ def index():
 		else:
 			html += '<a href="' + i['url_prom'] + '">LINK</a></td><td>'
 		html += i['url_origem'] + '</td><td>'
-		html += i['valor'] + '</td><td>'
-		html += i['nm_obs'] + '</td><td>'
-		html += i['dt_criacao'] + '</td></tr>'
+
+		if(i['valor']):
+			html += i['valor'] + '</td><td>'
+		else:
+			html +='</td><td>'
+
+		if(i['nm_obs']):
+			html += i['nm_obs'] + '</td><td>'
+		else:
+			html +='</td><td>'
+
+		if('dt_criacao' in i):
+			html += i['dt_criacao'] + '</td></tr>'
+		else:
+			html += '</td></tr>'
 
 	html +='</table>'
 
@@ -78,16 +94,7 @@ def json_api():
 	listItems = list(items_db)
 	itemsJson = dumps(listItems)
 
-	#for i in items_db:
-	#	itemsJson.append(i[0])
-
-
 	jobs_json = jsonify(itens=itemsJson, total=len(itemsJson))
-
-	#response = make_response(json.dumps(items_db))
-	#response.content_type = "application/json"
-
-	#return response
 
 	return jobs_json
 
