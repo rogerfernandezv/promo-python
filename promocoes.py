@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
 from flask import Flask
 from flask import jsonify
 from flask import make_response
+from flask import render_template
 from pymongo import MongoClient
 from bson.json_util import dumps
 import json
@@ -25,13 +27,11 @@ items_collection = db.items
 
 
 @app.route('/')
-def hello_world():
-	return 'Ola mundinho'
-
-@app.route('/gatry')
+@app.route('/index')
 def index():
 	items_db = items_collection.find().sort("dt_criacao", -1)
 	html = ''
+	return render_template('index.html',items_db = items_db)
 
 	for i in items_db:
 		html += '<table border="1">'
@@ -84,6 +84,7 @@ def index():
 			html += '</td></tr>'
 
 	html +='</table>'
+
 
 	return html
 
