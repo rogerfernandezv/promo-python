@@ -25,14 +25,16 @@ db = client.promocao
 items_collection = db.items
 #result = items_collection.create_index([('cod_prom', pymongo.ASCENDING)], unique=True)
 
-
 @app.route('/')
 @app.route('/index')
 def index():
-	items_db = items_collection.find().sort("dt_criacao", -1)
-	html = ''
+	items_db = items_collection.find().sort("dt_criacao", -1).limit(20)
 	return render_template('index.html',items_db = items_db)
 
+@app.route('/old')
+def old():
+	html = ''
+	items_db = items_collection.find().sort("dt_criacao", -1).limit(20)
 	for i in items_db:
 		html += '<table border="1">'
 		html += '''<tr>
@@ -88,7 +90,7 @@ def index():
 
 	return html
 
-@app.route('/gatryjson')
+@app.route('/promojson')
 def json_api():
 	
 	items_db = items_collection.find()

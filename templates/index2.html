@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+		{% for item in items_db %}
+		<div class="row">
+			<div class="col sm-8 blog-main">
+				<div class="blog-post">
+					<h2 class="blog-post-title">{{ item.nm_prom }}</h2>
+					<div class="col-md-2">
+						<div class="imgAbt">
+							<img class="img-thumbnail" alt="200x200" src="{{ item.url_img }}" data-holder-rendered="true" style="width: 200px; height: 200px">
+						</div>
+					</div>
+					<div class="col-md-8">
+						<p>{{ item.nm_obs }}</p>
+						{% for link in item.url_prom %}
+							<a href="{{ link }}">LINK</a><br>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+{% endblock %}

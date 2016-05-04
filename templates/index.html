@@ -1,23 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
-		{% for item in items_db %}
-		<div class="row">
-			<div class="col sm-8 blog-main">
-				<div class="blog-post">
-					<h2 class="blog-post-title">{{ item.nm_prom }}</h2>
-					<div class="col-md-2">
-						<div class="imgAbt">
-							<img class="img-thumbnail" alt="200x200" src="{{ item.url_img }}" data-holder-rendered="true" style="width: 200px; height: 200px">
+	<div class="section">
+		<div class="container">
+			{% for item in items_db %}
+				<div class="list-group-item">
+				<!--<div class="alert alert-dismissible alert-warning">-->
+					<div class="row">
+						<div class="col-md-3">
+							{% if item.url_img %}
+						  		<img src="{{ item.url_img }}" class="img-responsive img-thumbnail" style="width: 200px; height: 200px">
+						  	{% else %}
+						  		<img src="static/images/imagenotfound.png" class="img-responsive img-thumbnail" style="width: 200px; height: 200px">
+						  	{% endif %}
+						  	<p>
+						    	<p>Data Promoção: {{ item.data_prom }}</p>
+						    	<p>Data Criação: {{ item.dt_criacao }}</p>
+						  	</p>
+						</div>
+						<div class="col-md-8">
+							<!--<div class="alert alert-dismissible alert-danger">-->
+							  	<h2>{{ item.nm_prom }}</h2>
+							  	<p><small>{{ item.nm_obs }}.</small></p>
+							  	{% for link in item.url_prom %}
+									<p><small><a href="{{ link }}">LINK</a></small></p>
+								{% endfor %}
+							<!--</div>-->
 						</div>
 					</div>
-					<div class="col-md-8">
-						<p>{{ item.nm_obs }}</p>
-						{% for link in item.url_prom %}
-							<a href="{{ link }}">LINK</a><br>
-						{% endfor %}
-					</div>
 				</div>
-			</div>
+			{% endfor %}
 		</div>
-		{% endfor %}
+	</div>
+
 {% endblock %}
