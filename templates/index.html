@@ -21,9 +21,15 @@
 							<!--<div class="alert alert-dismissible alert-danger">-->
 							  	<h2>{{ item.nm_prom }}</h2>
 							  	<p><small>{{ item.nm_obs }}.</small></p>
-							  	{% for link in item.url_prom %}
-									<p><small><a href="{{ link }}">LINK</a></small></p>
-								{% endfor %}
+							  	<div class="btn-group-vertical">
+								  	{% for link in item.url_prom %}
+								  		<a href="{{ link }}" class="btn btn-default" target="_blank">Link</a>
+									{% endfor %}
+								</div>
+								<p>
+									<br>
+									<a href="{{ item.url_origem }}" target="_blank" class="btn btn-info">Origem</a>
+								</p>
 							<!--</div>-->
 						</div>
 					</div>
