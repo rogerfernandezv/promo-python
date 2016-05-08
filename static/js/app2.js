@@ -2,9 +2,10 @@ var promoApp = angular.module('promocoesApp',[]);
 
 promoApp.controller('PromocoesController', function($scope, $http, $timeout){
   var todoList = this;
-
+  //var url = "http://192.168.10.10:5000/promojson";
+  var url = "http://promocao-rogerdev.rhcloud.com/promojson";
   $scope.getData = function(){
-    $http.get('http://promocao-rogerdev.rhcloud.com/promojson').
+    $http.get(url).
       success(function(data){
         $scope.promos = data;
         window.console.log("capturando");

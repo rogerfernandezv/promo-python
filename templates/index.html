@@ -19,9 +19,9 @@
 							<!--<div class="alert alert-dismissible alert-danger">-->
 							  	<h2 ng-if="promos.name == 'gatry'">{{ '{{ promos.nm_prom }}' }} - R$ {{ '{{ promos.valor }}' }}</h2>
 							  	<h2 ng-if="promos.name != 'gatry'">{{ '{{ promos.nm_prom }}' }}</h2>
-							  	<p><small>{{ '{{ promos.nm_obs }}' }}.</small></p>
+							  	<p><small><pre ng-if="promos.nm_obs != null ">{{ '{{ promos.nm_obs }}' }}</pre></small></p>
 							  	<div class="btn-group-vertical">
-								  	<a ng-repeat="link in promos.url_prom" href="{{'{{ link }}'}}" class="btn btn-default" target="_blank">Link</a>
+								  	<a ng-repeat="link in promos.url_prom track by $index" href="{{'{{ link }}'}}" class="btn btn-default" target="_blank">Link</a>
 
 								</div>
 								<p>
