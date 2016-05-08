@@ -40,9 +40,9 @@ def json_api():
 
 	response = make_response(json_util.dumps({'promos': items_db}))
 	response.content_type="application/json"
-	response.headers.add('Access-Control-Allow-Origin', '*')
-  	response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-  	response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+	#response.headers.add('Access-Control-Allow-Origin', '*')
+  	#response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+  	#response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
 
 	return response
 

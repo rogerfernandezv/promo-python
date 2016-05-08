@@ -12,21 +12,21 @@
 
 						  	<p>
 						    	<p>Data Promoção: {{ '{{ promos.data_prom }}' }}</p>
-						    	<p>Data Criação: {{ '{{ promo.dt_criacao }}' }}</p>
+						    	<p>Data Criação: {{ '{{ promos.dt_criacao }}' }}</p>
 						  	</p>
 						</div>
 						<div class="col-md-8">
 							<!--<div class="alert alert-dismissible alert-danger">-->
 							  	<h2 ng-if="promos.name == 'gatry'">{{ '{{ promos.nm_prom }}' }} - R$ {{ '{{ promos.valor }}' }}</h2>
 							  	<h2 ng-if="promos.name != 'gatry'">{{ '{{ promos.nm_prom }}' }}</h2>
-							  	<p><small>{{ '{{ promos.nm_obs }}' }}.</small></p>
+							  	<p><pre><small>{{ '{{ promos.nm_obs }}' }}.</small></pre></p>
 							  	<div class="btn-group-vertical">
 								  	<a ng-repeat="link in promos.url_prom" href="{{'{{ link }}'}}" class="btn btn-default" target="_blank">Link</a>
 
 								</div>
 								<p>
 									<br>
-									<a href="{{'{{ item.url_origem }}'}}" target="_blank" class="btn btn-info">Origem</a>
+									<a href="{{'{{ promos.url_origem }}'}}" target="_blank" class="btn btn-info">Origem</a>
 								</p>
 							<!--</div>-->
 						</div>
