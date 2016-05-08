@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+	<div class="section">
+		<div class="container">
+			{% for item in items_db %}
+				<div class="list-group-item">
+				<!--<div class="alert alert-dismissible alert-warning">-->
+					<div class="row">
+						<div class="col-md-3">
+							{% if item.url_img %}
+						  		<img src="{{ item.url_img }}" class="img-responsive img-thumbnail" style="width: 200px; height: 200px">
+						  	{% else %}
+						  		<img src="static/images/imagenotfound.png" class="img-responsive img-thumbnail" style="width: 200px; height: 200px">
+						  	{% endif %}
+						  	<p>
+						    	<p>Data Promoção: {{ item.data_prom }}</p>
+						    	<p>Data Criação: {{ item.dt_criacao }}</p>
+						  	</p>
+						</div>
+						<div class="col-md-8">
+							<!--<div class="alert alert-dismissible alert-danger">-->
+							  	<h2>{{ item.nm_prom }} {% if item.name == "gatry" %} R$ {{item.valor}} {% endif %}</h2>
+							  	<p><small>{{ item.nm_obs }}.</small></p>
+							  	<div class="btn-group-vertical">
+								  	{% for link in item.url_prom %}
+								  		<a href="{{ link }}" class="btn btn-default" target="_blank">Link</a>
+									{% endfor %}
+								</div>
+								<p>
+									<br>
+									<a href="{{ item.url_origem }}" target="_blank" class="btn btn-info">Origem</a>
+								</p>
+							<!--</div>-->
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+
+{% endblock %}

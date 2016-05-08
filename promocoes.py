@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
-from flask import Flask
-from flask import jsonify
-from flask import make_response
-from flask import render_template
+from flask import Flask, make_response, render_template
 from pymongo import MongoClient
-from bson.json_util import dumps
-import json
+from bson import json_util
 import scrapinghub_funcs
 import pymongo
 import os
+
 
 app = Flask(__name__)
 
@@ -28,13 +25,31 @@ items_collection = db.items
 @app.route('/')
 @app.route('/index')
 def index():
-	items_db = items_collection.find().sort("dt_criacao", -1).limit(20)
-	return render_template('index.html',items_db = items_db)
+	return render_template('index.html')
+
+@app.route('/teste')
+def teste():
+	items_db = items_collection.find().sort("dt_criacao", -1).limit(40)
+	return render_template('teste.html',items_db = items_db)
+
+@app.route('/promojson')
+def json_api():
+	
+	items_db = items_collection.find().sort("dt_criacao", -1).limit(40)
+	#items_db = items_collection.find_one()
+
+	response = make_response(json_util.dumps({'promos': items_db}))
+	response.content_type="application/json"
+	response.headers.add('Access-Control-Allow-Origin', '*')
+  	response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+  	response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+
+	return response
 
 @app.route('/old')
 def old():
 	html = ''
-	items_db = items_collection.find().sort("dt_criacao", -1).limit(20)
+	items_db = items_collection.find().sort("dt_criacao", -1).limit(40)
 	for i in items_db:
 		html += '<table border="1">'
 		html += '''<tr>
@@ -90,16 +105,6 @@ def old():
 
 	return html
 
-@app.route('/promojson')
-def json_api():
-	
-	items_db = items_collection.find()
-	listItems = list(items_db)
-	itemsJson = dumps(listItems)
-
-	jobs_json = jsonify(itens=itemsJson, total=len(itemsJson))
-
-	return jobs_json
 
 if __name__ == '__main__':
 	app.run(debug=True)
