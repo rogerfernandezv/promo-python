@@ -79,7 +79,7 @@ def teste():
 @crossdomain(origin='*')
 def json_api():
 	
-	items_db = items_collection.find().sort("dt_criacao", -1).limit(5)
+	items_db = items_collection.find().sort("dt_criacao", -1).limit(100)
 	#items_db = items_collection.find_one()
 	
 	response = make_response(json_util.dumps({'promos': items_db}))
