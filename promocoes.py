@@ -5,7 +5,9 @@ from bson import json_util
 import scrapinghub_funcs
 import pymongo
 import os
-
+from datetime import timedelta
+from flask import request, current_app
+from functools import update_wrapper
 
 app = Flask(__name__)
 
@@ -22,6 +24,47 @@ db = client.promocao
 items_collection = db.items
 #result = items_collection.create_index([('cod_prom', pymongo.ASCENDING)], unique=True)
 
+def crossdomain(origin=None, methods=None, headers=None,
+                max_age=21600, attach_to_all=True,
+                automatic_options=True):
+    if methods is not None:
+        methods = ', '.join(sorted(x.upper() for x in methods))
+    if headers is not None and not isinstance(headers, basestring):
+        headers = ', '.join(x.upper() for x in headers)
+    if not isinstance(origin, basestring):
+        origin = ', '.join(origin)
+    if isinstance(max_age, timedelta):
+        max_age = max_age.total_seconds()
+
+    def get_methods():
+        if methods is not None:
+            return methods
+
+        options_resp = current_app.make_default_options_response()
+        return options_resp.headers['allow']
+
+    def decorator(f):
+        def wrapped_function(*args, **kwargs):
+            if automatic_options and request.method == 'OPTIONS':
+                resp = current_app.make_default_options_response()
+            else:
+                resp = make_response(f(*args, **kwargs))
+            if not attach_to_all and request.method != 'OPTIONS':
+                return resp
+
+            h = resp.headers
+
+            h['Access-Control-Allow-Origin'] = origin
+            h['Access-Control-Allow-Methods'] = get_methods()
+            h['Access-Control-Max-Age'] = str(max_age)
+            if headers is not None:
+                h['Access-Control-Allow-Headers'] = headers
+            return resp
+
+        f.provide_automatic_options = False
+        return update_wrapper(wrapped_function, f)
+    return decorator
+
 @app.route('/')
 @app.route('/index')
 def index():
@@ -32,75 +75,17 @@ def teste():
 	items_db = items_collection.find().sort("dt_criacao", -1).limit(100)
 	return render_template('teste.html',items_db = items_db)
 
-@app.route('/promojson')
+@app.route('/postsprom')
+@crossdomain(origin='*')
 def json_api():
 	
-	items_db = items_collection.find().sort("dt_criacao", -1).limit(100)
+	items_db = items_collection.find().sort("dt_criacao", -1).limit(5)
 	#items_db = items_collection.find_one()
-
+	
 	response = make_response(json_util.dumps({'promos': items_db}))
 	response.content_type="application/json"
 
 	return response
-
-@app.route('/old')
-def old():
-	html = ''
-	items_db = items_collection.find().sort("dt_criacao", -1).limit(100)
-	for i in items_db:
-		html += '<table border="1">'
-		html += '''<tr>
-					<td>cod_prom</td>
-					<td>data_prom</td>
-					<td>nm_prom</td>
-					<td>url_img</td>
-					<td>url_prom</td>
-					<td>url_origem</td>
-					<td>valor</td>
-					<td>nm_obs</td>
-					<td>dt_criacao<td>
-				</tr>'''
-		html += '<tr><td>'
-
-		if(isinstance(i['cod_prom'],list)):
-			html += i['cod_prom'][0] + '</td><td>'
-		else:
-			html += i['cod_prom'] + '</td><td>'
-
-		html += i['data_prom'] + '</td><td>'
-		html += i['nm_prom'] + '</td><td>'
-		if(i['url_img']):
-			html += '<img src="' + i['url_img'] + '"></td><td>'
-		else:
-			html += 'null</td><td>'
-
-		if(isinstance(i['url_prom'],list)):
-			for u in i['url_prom']:
-				html += '<a href="' + u + '">LINK</a><br>'
-			html += '</td><td>'
-		else:
-			html += '<a href="' + i['url_prom'] + '">LINK</a></td><td>'
-		html += i['url_origem'] + '</td><td>'
-
-		if(i['valor']):
-			html += i['valor'] + '</td><td>'
-		else:
-			html +='</td><td>'
-
-		if(i['nm_obs']):
-			html += i['nm_obs'] + '</td><td>'
-		else:
-			html +='</td><td>'
-
-		if('dt_criacao' in i):
-			html += i['dt_criacao'] + '</td></tr>'
-		else:
-			html += '</td></tr>'
-
-	html +='</table>'
-
-
-	return html
 
 
 if __name__ == '__main__':
