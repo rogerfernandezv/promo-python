@@ -1,6 +1,6 @@
 var items = {};
 
-$.getJSON('http://192.168.10.10:5000/promojson', function(result)
+$.getJSON('http://192.168.10.10:5000/postprom.json', function(result)
 	{
 		window.console.log(result['promos'])
 		Object.assign(items, result);

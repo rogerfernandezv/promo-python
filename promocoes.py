@@ -70,11 +70,6 @@ def crossdomain(origin=None, methods=None, headers=None,
 def index():
 	return render_template('index.html')
 
-@app.route('/teste')
-def teste():
-	items_db = items_collection.find().sort("dt_criacao", -1).limit(100)
-	return render_template('teste.html',items_db = items_db)
-
 @app.route('/postsprom')
 @crossdomain(origin='*')
 def json_api():
