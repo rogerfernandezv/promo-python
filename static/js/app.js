@@ -1,43 +1,31 @@
-var items = {};
+var promoApp = angular.module('promocoesApp',[]);
 
-$.getJSON('http://192.168.10.10:5000/postsprom.json', function(result)
-	{
-		window.console.log(result['promos'])
-		Object.assign(items, result);
+promoApp.controller('PromocoesController', function($scope, $http, $timeout, $window, $rootScope, srvAuth){
+  var todoList = this;
+  //var url = "http://192.168.10.10:5000/promojson";
+  var url = "http://promocao-rogerdev.rhcloud.com/postsprom";
+  $scope.getData = function(){
+    $http.get(url).
+      success(function(data){
+        $scope.promos = data;
+        window.console.log("capturando");
+      }).
+      error(function(data){
+        window.console.log("erro get json");
+      });
+  };
 
-	});
+    $scope.getData();
 
-function refreshPage() {
-    $.getJSON('http://192.168.10.10:5000/promojson', function(result)
-	{
-		Object.assign(items, result);
-	});
+    $scope.intervalFunction = function(){
+      $timeout(function(){
+        $scope.getData();
+        $scope.intervalFunction();
+      }, 60000);
+    };
 
-	setTimeout(function(){
-		refreshPage();
-	}, 10000);
-}
+    $scope.intervalFunction();
 
-window.setTimeout(function(){
-	refreshPage();
-}, 10000);
+    
 
-var data2 = {lista:[{"nm_prom":"1","cod":["3","4"]},{"nm_prom":"3","cod":"5"}]};
-
-var promVue = new Vue({
-	//el: "#vue",
-	
-	data: items,
-
-	methods: {
-		exibir: function()
-		{
-			window.console.log("Items variavel global");
-			window.console.log(this);
-		}
-	}
-});
-
-new Vue({
-	el: '#vue'
 });

@@ -1,5 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
+	<script>
+	  window.fbAsyncInit = function() {
+	    FB.init({
+	      appId      : '250450565314495',
+	      xfbml      : true,
+	      version    : 'v2.6'
+	    });
+	  };
+
+	  (function(d, s, id){
+	     var js, fjs = d.getElementsByTagName(s)[0];
+	     if (d.getElementById(id)) {return;}
+	     js = d.createElement(s); js.id = id;
+	     js.src = "//connect.facebook.net/en_US/sdk.js";
+	     fjs.parentNode.insertBefore(js, fjs);
+	   }(document, 'script', 'facebook-jssdk'));
+	</script>
 	<div class="section">
 		<div class="container" ng-controller="PromocoesController as promocoes">
 
@@ -16,6 +33,7 @@
 						  	</p>
 						</div>
 						<div class="col-md-8">
+							<div class="fb-like" data-share="true" data-width="450" data-show-faces="true">
 							<!--<div class="alert alert-dismissible alert-danger">-->
 							  	<h2 ng-if="promos.name == 'gatry'">{{ '{{ promos.nm_prom }}' }} - R$ {{ '{{ promos.valor }}' }}</h2>
 							  	<h2 ng-if="promos.name != 'gatry'">{{ '{{ promos.nm_prom }}' }}</h2>
@@ -27,8 +45,9 @@
 								<p>
 									<br>
 									<a href="{{'{{ promos.url_origem }}'}}" target="_blank" class="btn btn-info">Origem</a>
+									<a href="#" class="btn btn-info" ng-click="share()">Compartilhar</a>
 								</p>
-							<!--</div>-->
+							</div>
 						</div>
 					</div>
 				</div>
