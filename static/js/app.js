@@ -1,6 +1,6 @@
 var promoApp = angular.module('promocoesApp',[]);
 
-promoApp.controller('PromocoesController', function($scope, $http, $timeout, $window, $rootScope, srvAuth){
+promoApp.controller('PromocoesController', function($scope, $http, $timeout){
   var todoList = this;
   //var url = "http://192.168.10.10:5000/promojson";
   var url = "http://promocao-rogerdev.rhcloud.com/postsprom";
