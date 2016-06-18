@@ -8,4 +8,4 @@ target
 !.openshift
 
 # Ignore imgs directory #
-/imgs
+imgs/
