@@ -28,7 +28,7 @@ for j in jobList:
 				url_image = 'http://promocao-rogerdev.rhcloud.com/static/images/imagenotfound.png'
 				try:
 					print "tentando baixar imagem"
-					
+
 					img = urllib.urlopen(i['url_img'])
 
 					#verificando se a url funciona
@@ -54,8 +54,10 @@ for j in jobList:
 						#removendo antiga imagem
 						os.remove(os.environ['OPENSHIFT_REPO_DIR'] + 'imgs/' + name)
 
+				except IOError:
+					print 'Arquivo ou Diretorio nao encontrado!'
 				except:
-					pass
+					print 'Erro inesperado'
 				
 				i['url_img'] = url_image
 				
