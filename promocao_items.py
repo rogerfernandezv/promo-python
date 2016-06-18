@@ -27,11 +27,13 @@ for j in jobList:
 			try:
 				url_image = 'http://promocao-rogerdev.rhcloud.com/static/images/imagenotfound.png'
 				try:
+					print "tentando baixar imagem"
+					
 					img = urllib.urlopen(i['url_img'])
 
 					#verificando se a url funciona
 					if(img.getcode() == 200):
-
+						print "imagem baixada com sucesso"
 						# nomeando e capturando dados dos links
 						name = i['url_img'].split('/')[-1]
 						local_img = open(os.environ['OPENSHIFT_REPO_DIR'] + 'imgs/' + name, 'w')
