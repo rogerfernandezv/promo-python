@@ -36,7 +36,8 @@ for j in jobList:
 						print "imagem baixada com sucesso"
 						# nomeando e capturando dados dos links
 						name = i['url_img'].split('/')[-1]
-						local_img = open(os.environ['OPENSHIFT_REPO_DIR'] + 'imgs/' + name, 'w')
+						local_img = open(os.environ['OPENSHIFT_REPO_DIR'] + 'static/imgs/' + name, 'w')
+						print "Imagem salva no disco..."
 						local_img.write(img.read())
 
 						#fechando dados pegos da url
@@ -44,15 +45,17 @@ for j in jobList:
 						local_img.close()
 
 						#tratando a imagem diminindo para 200x200 px
-						im = Image.open(os.environ['OPENSHIFT_REPO_DIR'] + 'imgs/' + name)
+						im = Image.open(os.environ['OPENSHIFT_REPO_DIR'] + 'static/imgs/' + name)
+						print "Abrindo imagem para modificar..."
 						im.thumbnail((200,200))
-						im.save(os.environ['OPENSHIFT_REPO_DIR'] + 'imgs/mini_' + name)
+						im.save(os.environ['OPENSHIFT_REPO_DIR'] + 'static/imgs/mini_' + name)
+						print "Salvando imagem modificada..."
 						im.close()
 
 						url_image = 'http://promocao-rogerdev.rhcloud.com/static/imgs/mini_' + name
 
 						#removendo antiga imagem
-						os.remove(os.environ['OPENSHIFT_REPO_DIR'] + 'imgs/' + name)
+						os.remove(os.environ['OPENSHIFT_REPO_DIR'] + 'static/imgs/' + name)
 
 				except IOError:
 					print 'Arquivo ou Diretorio nao encontrado!'
