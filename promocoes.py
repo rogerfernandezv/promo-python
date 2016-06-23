@@ -75,12 +75,21 @@ def index():
 def json_api():
 	
 	items_db = items_collection.find().sort("dt_criacao", -1).limit(100)
-	#items_db = items_collection.find_one()
 	
 	response = make_response(json_util.dumps({'promos': items_db}))
 	response.content_type="application/json"
 
 	return response
+
+@app.route('/postsprom/<post_id>')
+@crossdomain(origin='*')
+def json_api_id(post_id):
+    
+    items_db = items_collection.find_one({"cod_prom":post_id})
+    response = make_response(json_util.dumps({'promos': items_db}))
+    response.content_type="application/json"
+
+    return response
 
 
 if __name__ == '__main__':
