@@ -91,6 +91,24 @@ def json_api_id(post_id):
 
     return response
 
+@app.route('/postnew/<cod_prom>')
+@crossdomain(origin='*')
+def json_api_new(cod_prom):
+    
+    items_db = items_collection.find().sort("dt_criacao", -1).limit(100)
+    
+    #last = items_db[0]
+    items_result = []
+    if(cod_prom != items_db[0]['cod_prom']): 
+        for i in items_db:
+            if(cod_prom != i['cod_prom']):
+                items_result.append(i)
+            else:
+                break
+
+    response = make_response(json_util.dumps({'diffs': items_result, 'len': len(items_result)}))
+    response.content_type="application/json"
+    return response
 
 if __name__ == '__main__':
 	app.run(debug=True)
