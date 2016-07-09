@@ -110,6 +110,17 @@ def json_api_new(cod_prom):
     response.content_type="application/json"
     return response
 
+@app.route('/postjson', methods=['GET', 'POST'])
+@crossdomain(origin='*')
+def json_resp():
+    content = request.json
+    print content
+    print request.headers
+    response = make_response(json_util.dumps({'promos': 'funcionou'}))
+    response.content_type="application/json"
+
+    return response
+
 if __name__ == '__main__':
 	app.run(debug=True)
 	#app.run(host='0.0.0.0', debug="True")
