@@ -5,6 +5,7 @@ from bson import json_util
 import scrapinghub_funcs
 import pymongo
 import os
+import re
 from datetime import timedelta
 from flask import request, current_app
 from functools import update_wrapper
@@ -23,6 +24,7 @@ db = client.promocao
 #set collection
 items_collection = db.items
 #result = items_collection.create_index([('cod_prom', pymongo.ASCENDING)], unique=True)
+
 
 def crossdomain(origin=None, methods=None, headers=None,
                 max_age=21600, attach_to_all=True,
@@ -110,13 +112,51 @@ def json_api_new(cod_prom):
     response.content_type="application/json"
     return response
 
-@app.route('/postjson', methods=['GET', 'POST'])
-@crossdomain(origin='*')
+@app.route('/postjson', methods=['GET', 'POST', 'OPTIONS'])
+@crossdomain(origin='*',headers='Content-Type')
 def json_resp():
+
+    #pegando conteudo em formato json
     content = request.json
-    print content
-    print request.headers
-    response = make_response(json_util.dumps({'promos': 'funcionou'}))
+    
+    #definindo variaveis
+    cod_prom = content['cod_prom']
+    filtros = content['filtros']
+    allnotification = content['not']
+
+    items_db = items_collection.find().sort("dt_criacao", -1).limit(100)
+    
+    #last = items_db[0]
+    items_result = []
+    items_filtered = []
+
+    if(cod_prom != items_db[0]['cod_prom']): 
+        for i in items_db:
+            if(cod_prom != i['cod_prom']):
+                items_result.append(i)
+            else:
+                break
+
+    if len(items_result) > 0 and not allnotification and len(filtros) > 0:
+        for item in items_result:
+            for filtro in filtros:
+                inc = re.compile(filtro['palavra'], re.I)
+                exc = None
+                if(filtro['excludente'] != ''):
+                    exc = re.compile(filtro['excludente'], re.I)
+
+                if exc:
+                    if inc.search(item['nm_prom']) and not exc.search(item['nm_prom']):
+                        items_filtered.append(item)
+
+                else:
+                    if inc.search(item['nm_prom']):
+                        items_filtered.append(item)
+    else:
+        if allnotification:
+            items_filtered = items_result
+
+    response = make_response(json_util.dumps({'result': items_filtered}))
     response.content_type="application/json"
 
     return response
