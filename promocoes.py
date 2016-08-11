@@ -19,7 +19,7 @@ db = client.promocao
 
 # LOCAL TEST
 #client = MongoClient()
-#db = client.promocoes
+#db = client.promocao
 
 #set collection
 items_collection = db.items

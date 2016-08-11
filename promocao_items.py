@@ -4,6 +4,9 @@ import urllib
 import pymongo
 import os
 import scrapinghub_funcs
+import httplib
+import re
+
 
 #mongo stuffs OPENSHIFT
 #client = MongoClient("mongodb://%s:%s/" % (os.environ['OPENSHIFT_MONGODB_DB_HOST'], os.environ['OPENSHIFT_MONGODB_DB_PORT']))
@@ -18,6 +21,20 @@ items_collection = db.items
 #result = items_collection.create_index([('cod_prom', pymongo.ASCENDING)], unique=True)
 
 jobList = scrapinghub_funcs.listJobs()
+
+def tratar_img(name):
+	#tratando a imagem diminindo para 200x200 px
+	im = Image.open(os.environ['OPENSHIFT_REPO_DIR'] + 'static/imgs/' + name)
+	print "Abrindo imagem para modificar..."
+	im.thumbnail((200,200))
+	im.save(os.environ['OPENSHIFT_REPO_DIR'] + 'static/imgs/mini_' + name)
+	print "Salvando imagem modificada..."
+	im.close()
+
+	url_image = 'http://promocao-rogerdev.rhcloud.com/static/imgs/mini_' + name
+
+	#removendo antiga imagem
+	os.remove(os.environ['OPENSHIFT_REPO_DIR'] + 'static/imgs/' + name)
 
 for j in jobList:
 	if j['state'] == 'finished':
@@ -43,18 +60,35 @@ for j in jobList:
 						img.close()
 						local_img.close()
 
-						#tratando a imagem diminindo para 200x200 px
-						im = Image.open(os.environ['OPENSHIFT_REPO_DIR'] + 'static/imgs/' + name)
-						print "Abrindo imagem para modificar..."
-						im.thumbnail((200,200))
-						im.save(os.environ['OPENSHIFT_REPO_DIR'] + 'static/imgs/mini_' + name)
-						print "Salvando imagem modificada..."
-						im.close()
+						tratar_img(name)
 
-						url_image = 'http://promocao-rogerdev.rhcloud.com/static/imgs/mini_' + name
+					elif img.getcode() == 403:
+						teste = re.compile("^(https).*")
+						result = teste.match(i['url_img'])
+						url_p1 = ''
+						url_p2 = ''
+						fname = ''
+						if result:
+							url_https = result.group(0)
+							url_p1 = re.sub(r'^(https://)','',result.group(0))
+							url_p1 = re.sub(r'\/.*','',url_p1)
+							url_p2 = re.sub(r'.*\.com\.br','',result.group(0))
+							print "url_p1: " + url_p1
+							print "url_p2: " + url_p2
+							print "result: " + result.group(0)
+							
+							fname = re.sub(r'.*\/','',result.group(0))
 
-						#removendo antiga imagem
-						os.remove(os.environ['OPENSHIFT_REPO_DIR'] + 'static/imgs/' + name)
+							conn = httplib.HTTPSConnection(url_p1)
+							conn.request("GET",url_p2)
+							r1 = conn.getresponse()
+							print r1.status, r1.reason
+							if r1.status == 200 and r1.reason == 'OK':
+								data1 = r1.read()
+								with open(os.environ['OPENSHIFT_REPO_DIR'] + 'static/imgs/' + fname,"w") as f:
+								  f.write(data1)
+
+								tratar_img(fname)
 
 				except IOError:
 					print 'Arquivo ou Diretorio nao encontrado!'
