@@ -62,7 +62,7 @@ for j in jobList:
 
 						tratar_img(name)
 
-					elif img.getcode() == 403:
+					else:
 						teste = re.compile("^(https).*")
 						result = teste.match(i['url_img'])
 						url_p1 = ''
