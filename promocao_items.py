@@ -88,7 +88,7 @@ for j in jobList:
 								  f.write(data1)
 
 								tratar_img(fname)
-								url_image = 'http://promocao-rogerdev.rhcloud.com/static/imgs/mini_' + name
+								url_image = 'http://promocao-rogerdev.rhcloud.com/static/imgs/mini_' + fname
 
 				except IOError:
 					print 'Arquivo ou Diretorio nao encontrado!'
