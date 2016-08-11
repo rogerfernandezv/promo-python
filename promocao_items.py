@@ -31,8 +31,6 @@ def tratar_img(name):
 	print "Salvando imagem modificada..."
 	im.close()
 
-	url_image = 'http://promocao-rogerdev.rhcloud.com/static/imgs/mini_' + name
-
 	#removendo antiga imagem
 	os.remove(os.environ['OPENSHIFT_REPO_DIR'] + 'static/imgs/' + name)
 
@@ -61,6 +59,7 @@ for j in jobList:
 						local_img.close()
 
 						tratar_img(name)
+						url_image = 'http://promocao-rogerdev.rhcloud.com/static/imgs/mini_' + name
 
 					else:
 						teste = re.compile("^(https).*")
@@ -89,6 +88,7 @@ for j in jobList:
 								  f.write(data1)
 
 								tratar_img(fname)
+								url_image = 'http://promocao-rogerdev.rhcloud.com/static/imgs/mini_' + name
 
 				except IOError:
 					print 'Arquivo ou Diretorio nao encontrado!'
